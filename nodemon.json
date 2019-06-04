@@ -1,0 +1,8 @@
+{
+    "env": {
+        "MONGO_US": "vigan",
+        "MONGO_PA": "Vigan1234",
+        "MONGO_D": "fresca",
+        "JWT_KEY": "cedx"
+    }
+}
