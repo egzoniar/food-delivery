@@ -1,158 +1,32 @@
-const mongoose = require('mongoose');
 const express = require('express');
-
 const router = express.Router();
-const Product = require('../models/product')
 
+// Controller reference
+const ProductController = require('../controllers/product')
 
+// Middleware references
 const userIsAuth = require('../middleware/users_middleware')
 const adminIsAuth = require('../middleware/admin_middleware')
 
-// Get all products
-router.get('/listProducts', userIsAuth, (req, res, next) => {
-  Product
-    .find()
-    .select('_id name desc price img')
-    .exec()
-    .then(data => {
-      const response = {
-        count: data.length,
-        products: data
-      }
-      res.status(200).json(response)
-    })
-    .catch(err => {
-      console.log(err)
-      res.status(500).json(err)
-    })
-})
+// Get all products (User request)
+router.get('/listProducts', userIsAuth, ProductController.user_get_products)
 
-router.get('/adminListProducts', adminIsAuth, (req, res, next) => {
-  Product
-    .find()
-    .select('_id name desc price img')
-    .exec()
-    .then(data => {
-      const response = {
-        count: data.length,
-        products: data
-      }
-      res.status(200).json(response)
-    })
-    .catch(err => {
-      console.log(err)
-      res.status(500).json(err)
-    })
-})
+// Get all product (Admin request)
+router.get('/adminListProducts', adminIsAuth, ProductController.admin_get_products)
 
-//get Product with id
-router.get('/singleProduct/:productId', userIsAuth, (req, res, next) => {
-  const id = req.params.productId;
+// Get single product (User request)
+router.get('/singleProduct/:productId', userIsAuth, ProductController.user_get_single_product)
 
-  Product.findById(id)
-    .exec()
-    .then(data => {
-      console.log(data)
-      if(data) {
-        res.status(200).json(data)
-      } else {
-        res.status(404).json(
-          {
-            message: "No valid entry was found for provided ID!"
-          })
-      }
-    })
-    .catch(err => {
-      console.log(err)
-      res.status(500).json({
-        error: err
-      })
-    })
-})
-
-router.get('/adminSingleProduct/:productId', adminIsAuth, (req, res, next) => {
-  const id = req.params.productId;
-
-  Product.findById(id)
-    .exec()
-    .then(data => {
-      console.log(data)
-      if(data) {
-        res.status(200).json(data)
-      } else {
-        res.status(404).json(
-          {
-            message: "No valid entry was found for provided ID!"
-          })
-      }
-    })
-    .catch(err => {
-      console.log(err)
-      res.status(500).json({
-        error: err
-      })
-    })
-})
-
+// Get single product (Admin request)
+router.get('/adminSingleProduct/:productId', adminIsAuth, ProductController.admin_get_single_product)
 
 // Add Product
-router.post('/addProduct', adminIsAuth, (req, res, next) => {
-  const product = new Product({
-    _id: new mongoose.Types.ObjectId(),
-    name: req.body.name,
-    desc: req.body.desc,
-    price: req.body.price,
-    category: req.body.category,
-    img: req.body.img,
-  })
-
-  product
-    .save()
-    .then(result => {
-      console.log(result)
-      res.status(201).json({
-        message: "A product is created",
-        createdProduct: result
-      })
-    })
-    .catch(err => console.log(err))
-})
+router.post('/addProduct', adminIsAuth, add_product)
 
 // Update Product
-router.patch('/updateProduct/:productId', adminIsAuth, (req, res, next) => {
-  const id = req.params.productId
-  const updateOps = {}
-
-  for(const ops of req.body) {
-    updateOps[ops.propName] = ops.value
-  }
-
-  Product
-    .update({_id: id}, {$set: updateOps})
-    .exec()
-    .then(result => {
-      console.log(result)
-      res.status(200).json(result)
-    })
-    .catch(err => {
-      console.log(err)
-      res.status(500).json(err)
-    })
-})
+router.patch('/updateProduct/:productId', adminIsAuth, ProductController.update_product)
 
 // Delete Product
-router.delete('/deleteProduct/:productId', adminIsAuth, (req, res, next) => {
-  const id = req.params.productId
-
-  Product
-    .remove( { _id: id } )
-    .then(result => {
-      res.status(500).json(result)
-    })
-    .catch(err => {
-      console.log(err)
-      res.status(500).json(err)
-    })
-})
+router.delete('/deleteProduct/:productId', adminIsAuth, ProductController.delete_product)
 
 module.exports = router;

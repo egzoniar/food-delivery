@@ -1,52 +1,20 @@
-const mongoose = require('mongoose')
 const express = require('express');
 
 const router = express.Router();
-const Latency = require('../models/latency')
+
+// Middleware reference
 const adminAuth = require('../middleware/admin_middleware')
 
+// Controller reference
+const LatencyController = require('../controllers/latency')
+
 // Get Latency
-router.get('/getLatency', adminAuth, (req, res, next) => {
-  Latency.find()
-    .exec()
-    .then(data => {
-      res.status(200).json(data)
-    })
-    .catch(err => {
-      res.status(500).json(err)
-    })
-})
+router.get('/getLatency', adminAuth, LatencyController.get_latency)
 
 // Add Latency
-router.post('/addLatency', adminAuth, (req, res, next) => {
-  const latency = new Latency({
-    _id: new mongoose.Types.ObjectId(),
-    time: req.body.time
-  })
-
-  latency
-    .save()
-    .then(result => {
-      res.status(200).json(result)
-    })
-    .catch(err => {
-      res.status(500).json(err)
-    })
-
-})
+router.post('/addLatency', adminAuth, LatencyController.add_latency)
 
 // Update Latency
-router.patch('/updateLatency:latencyId', adminAuth, (req, res, next) => {
-  const id = req.params.latencyId
-
-  Latency.update({_id: id}, {$set: {time: req.body.time}})
-    .exec()
-    .then(result => {
-      res.status(200).json(result)
-    })
-    .catch(err => {
-      res.status(500).json(err)
-    })
-})
+router.patch('/updateLatency:latencyId', adminAuth, LatencyController.update_latency)
 
 module.exports = router;
