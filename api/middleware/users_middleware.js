@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 module.exports = (req, res, next) => {
   try {
     console.log(req.headers)
-    const decoded = jwt.verify(req.headers.token, 'fresca_user')
+    const decoded = jwt.verify(req.headers.token, 'fresca_users')
     req.userData = decoded
     next()
   } 

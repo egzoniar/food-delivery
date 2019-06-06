@@ -9,24 +9,24 @@ const userIsAuth = require('../middleware/users_middleware')
 const adminIsAuth = require('../middleware/admin_middleware')
 
 // Get all products (User request)
-router.get('/listProducts', userIsAuth, ProductController.user_get_products)
+router.get('/userGetProducts', userIsAuth, ProductController.user_get_products) //
 
 // Get all product (Admin request)
-router.get('/adminListProducts', adminIsAuth, ProductController.admin_get_products)
+router.get('/adminGetProducts', adminIsAuth, ProductController.admin_get_products) //
 
 // Get single product (User request)
-router.get('/singleProduct/:productId', userIsAuth, ProductController.user_get_single_product)
+router.get('/userSingleProduct/:productId', userIsAuth, ProductController.user_get_single_product) //
 
 // Get single product (Admin request)
-router.get('/adminSingleProduct/:productId', adminIsAuth, ProductController.admin_get_single_product)
+router.get('/adminSingleProduct/:productId', adminIsAuth, ProductController.admin_get_single_product) //
 
 // Add Product
-router.post('/addProduct', adminIsAuth, add_product)
+router.post('/addProduct', adminIsAuth, ProductController.add_product) //
 
 // Update Product
-router.patch('/updateProduct/:productId', adminIsAuth, ProductController.update_product)
+router.patch('/updateProduct/:productId', adminIsAuth, ProductController.update_product) //
 
 // Delete Product
-router.delete('/deleteProduct/:productId', adminIsAuth, ProductController.delete_product)
-
+router.delete('/deleteProduct/:productId', adminIsAuth, ProductController.delete_product) //
+ 
 module.exports = router;

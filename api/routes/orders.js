@@ -10,29 +10,29 @@ const adminIsAuth = require('../middleware/admin_middleware')
 const driverIsAuth = require('../middleware/drivers_middleware')
 
 // Get orders by driver ID
-router.get('/getOrdersByDriverID/:driverId', adminIsAuth, OrdersController.get_driver_by_id)
+router.get('/getOrdersByDriverID/:driverId', adminIsAuth, OrdersController.get_driver_by_id) //
 
 // Get active orders
-router.get('/getActiveOrders', adminIsAuth, OrdersController.get_active_orders);
+router.get('/getActiveOrders', adminIsAuth, OrdersController.get_active_orders); //
 
 // Get archived orders
-router.get('/getArchivedOrders', adminIsAuth, OrdersController.get_archived_orders);
+router.get('/getArchivedOrders', adminIsAuth, OrdersController.get_archived_orders); //
 
 // Get prepared orders
-router.get('/getPrepOrders', driverIsAuth, OrdersController.get_prep_orders);
+router.get('/getPrepOrders', driverIsAuth, OrdersController.get_prep_orders); //
 
 // Get inMaking orders
-router.get('/listInMakingOrders', adminIsAuth, OrdersController.get_inmaking_orders);
+router.get('/listInMakingOrders', adminIsAuth, OrdersController.get_inmaking_orders); //
 
 // Add Order
-router.post('/makeOrder', userIsAuth, OrdersController.make_order);
+router.post('/makeOrder', userIsAuth, OrdersController.make_order); //
 
 // Take an order
-router.put('/takeAnOrder/:orderId', driverIsAuth, OrdersController.take_an_order)
+router.put('/takeAnOrder/:orderId', driverIsAuth, OrdersController.take_an_order) //
 
 // Archive order
-router.patch('/archiveOrder/:orderId', driverIsAuth, OrdersController.archive_order)
+router.patch('/archiveOrder/:orderId', driverIsAuth, OrdersController.archive_order) //
 
-router.patch('/inMaking/:orderId', adminIsAuth, OrdersController.inmaking)
+router.patch('/inMaking/:orderId', adminIsAuth, OrdersController.inmaking) //
 
 module.exports = router;

@@ -22,6 +22,7 @@ exports.get_single_user = (req, res, next) => {
   const id = req.params.userId;
 
   User.findById(id)
+    .populate('orders', 'location user items.price orderTotal')
     .exec()
     .then(data => {
       console.log(data)

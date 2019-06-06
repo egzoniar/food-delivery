@@ -19,7 +19,7 @@ mongoose.connect(
         console.log("Database is connected")
     })
     .catch(error => {
-        console.log(error)
+        console.log( error)
     })
 
 mongoose.Promise = global.Promise;

@@ -99,7 +99,7 @@ exports.make_order = async (req, res, next) => {
     _id: new mongoose.Types.ObjectId(),
     location: {
       type: "Point",
-      coordinates: [122.23, 24.5]
+      coordinates: req.body.coordinates
     },
     active: true,
     inMaking: true,
@@ -109,7 +109,7 @@ exports.make_order = async (req, res, next) => {
   let tmp = []
   for (let item of req.body.items) {
     const prod = await getProdData(item.productId)
-
+    console.log(prod)
     tmp.push({
       productId: item.productId,
       name: prod.name,
@@ -210,13 +210,15 @@ exports.inmaking = (req, res, next) => {
 }
 
 function getProdData(id) {
-  return prodRes = Product.findById({
-      _id: id
-    })
-    .then(res => {
-      return res
-    })
-    .catch(err => {
-      throw new Error("HHSHSHSHS")
-    })
+  try {
+    const prod = Product.findById(id)
+    if (!prod) {
+      throw new Error("Product not found!");
+    }
+
+    return prod
+    
+  } catch (err) {
+    throw err;
+  }
 }

@@ -4,19 +4,21 @@ const router = express.Router();
 // Middleware reference
 const adminIsAuth = require('../middleware/admin_middleware')
 
+const UsersController = require('../controllers/user')
+
 // Get all users
-router.get('/listUsers', adminIsAuth, get_users);
+router.get('/getUsers', adminIsAuth, UsersController.get_users) //
 
 // Get single user by ID
-router.get('/singleUser/:userId', adminIsAuth, get_single_user)
+router.get('/singleUser/:userId', adminIsAuth, UsersController.get_single_user) //
 
 // Get user by phone number
-router.get('/getUserByPhone/:phone', get_user_by_phone)
+router.get('/getUserByPhone/:phone', UsersController.get_user_by_phone) //
 
 // Add User (Register)
-router.post('/userSignup', user_signup);
+router.post('/userSignup', UsersController.user_signup); //
 
 // User login
-router.post('/login', user_login)
+router.post('/login', UsersController.user_login) //
 
 module.exports = router;

@@ -8,12 +8,12 @@ const adminAuth = require('../middleware/admin_middleware')
 const DriversController = require('../controllers/driver')
 
 // Add Driver
-router.post('/addDriver', adminAuth, DriversController.add_driver)
+router.post('/addDriver', adminAuth, DriversController.add_driver) //
 
 // List drivers
-router.get('/listDrivers', adminAuth, DriversController.get_drivers)
+router.get('/getDrivers', adminAuth, DriversController.get_drivers) //
 
 // Login driver
-router.post('/driverLogin', DriversController.driver_login)
+router.post('/driverLogin', DriversController.driver_login) //
 
 module.exports = router;
