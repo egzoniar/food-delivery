@@ -222,3 +222,54 @@ function getProdData(id) {
     throw err;
   }
 }
+
+exports.filter = (req, res) => {
+  const prefix = req.params.prefix
+
+  const opts = getDate(prefix)
+  console.log(opts)
+
+  Order.find({ createdAt: opts })
+  .populate('Order.itemSchema')
+  .exec()
+  .then(result => {
+    res.status(200).json({
+      message: prefix + " Orders",
+      count: "Total number of orders this " + prefix + ": " + result.length,
+      orders: result
+    })
+  })
+  .catch(err => res.status(401).json(err))
+}
+
+function getDate(prefix) {
+  const jsDate = new Date()
+  let opts = {}
+  const day = (jsDate.getDate() === 1) ? 1 : (jsDate.getDate() - (jsDate.getDay()))
+
+  if(prefix === 'week') {
+    opts.$gte = new Date(jsDate.getFullYear() + '-' + (jsDate.getMonth()+1) + '-' + day)
+  }
+  else if(prefix === 'day') {
+    opts.$gte = new Date(jsDate.getFullYear() + '-' + (jsDate.getMonth()+1) + '-' + jsDate.getDate())
+  }
+
+  return opts
+}
+
+exports.filter_full_date = (req, res) => {
+  const date = new Date(req.params.date);
+  const dateMin = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + (date.getDate())
+  const dateMax = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + (date.getDate()+1)
+  Order.find({ createdAt: {$gte: dateMin, $lt: dateMax} })
+  .populate('Order.itemSchema')
+  .exec()
+  .then(result => {
+    res.status(200).json({
+      count: result.length,
+      orders: result
+    })
+  })
+  .catch(err => res.status(401).json(err))
+
+}

@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const Order = require('../models/order')
 
 // Controller reference
 const OrdersController = require('../controllers/order')
@@ -34,5 +35,9 @@ router.put('/takeAnOrder/:orderId', driverIsAuth, OrdersController.take_an_order
 router.patch('/archiveOrder/:orderId', driverIsAuth, OrdersController.archive_order) //
 
 router.patch('/inMaking/:orderId', adminIsAuth, OrdersController.inmaking) //
+
+router.get('/filter/:prefix', adminIsAuth, OrdersController.filter) //
+
+router.get('/filterFullDate/:date', adminIsAuth, OrdersController.filter_full_date)
 
 module.exports = router;
