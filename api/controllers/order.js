@@ -95,6 +95,14 @@ exports.make_order = async (req, res, next) => {
     return;
   }
 
+  const userStatus = await User.findById({_id: req.body.user})
+  if(userStatus.banned) {
+    res.status(500).json({
+      message: "This account is banned from admin, you can't make order"
+    })
+    return;
+  }
+
   const orderObj = {
     _id: new mongoose.Types.ObjectId(),
     location: {
@@ -149,8 +157,18 @@ exports.make_order = async (req, res, next) => {
   } catch (err) {
     throw err;
   }
+}
 
-
+function userIsBanned(id) {
+  // User.findById({_id: id})
+  // .exec()
+  // .then(result => {
+  //   return result.banned
+  // })
+  // .catch()
+  User.findById({_id: id}, (err, user) => {
+    console.log(typeof user + " " + user)
+  })
 }
 
 exports.take_an_order = async (req, res, next) => {

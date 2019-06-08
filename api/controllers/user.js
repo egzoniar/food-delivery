@@ -85,7 +85,8 @@ exports.user_signup = (req, res, next) => {
           _id: new mongoose.Types.ObjectId,
           name: req.body.name,
           phone: req.body.phone,
-          email: req.body.email
+          email: req.body.email,
+          banned: false
         })
 
         user.save()
@@ -121,4 +122,42 @@ exports.user_login = (req, res) => {
       token: token
     })
   })
+}
+
+
+// Ban user
+exports.ban_user = (req, res) => {
+  const phoneNo = req.params.phoneNo
+
+  User.update({
+    phone: phoneNo
+  }, {
+    $set: {
+      banned: true
+    }
+  })
+  .then(result => {
+    res.status(200).json({
+      message: "User is banned!"
+    })
+  })
+  .catch(err => res.status(500).json(err))
+}
+
+exports.unban_user = (req, res) => {
+  const phoneNo = req.params.phoneNo
+
+  User.update({
+    phone: phoneNo
+  }, {
+    $set: {
+      banned: false
+    }
+  })
+  .then(result => {
+    res.status(200).json({
+      message: "User is unbanned!"
+    })
+  })
+  .catch(err => res.status(500).json(err))
 }

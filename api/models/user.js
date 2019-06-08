@@ -20,7 +20,8 @@ const userSchema = mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Order'
         }
-    ]
+    ],
+    banned: Boolean
 })
 
 module.exports = mongoose.model('User', userSchema)
