@@ -22,9 +22,9 @@ router.post('/userSignup', UsersController.user_signup); //
 router.post('/login', UsersController.user_login) //
 
 // Ban a user
-router.patch('/banUser/:phoneNo', adminIsAuth, UsersController.ban_user)
+router.patch('/banUser/:phoneNo', adminIsAuth, UsersController.ban_user) //
 
 // Unban a user
-router.patch('/unbanUser/:phoneNo', adminIsAuth, UsersController.unban_user)
+router.patch('/unbanUser/:phoneNo', adminIsAuth, UsersController.unban_user) //
 
 module.exports = router;

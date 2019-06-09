@@ -52,6 +52,7 @@ exports.get_archived_orders = (req, res, next) => {
     })
 }
 
+// Get orders that are ready to deliver
 exports.get_prep_orders = (req, res, next) => {
   Order.find()
     .where("inMaking").equals("false")
@@ -95,6 +96,7 @@ exports.make_order = async (req, res, next) => {
     return;
   }
 
+  // Order cannot be made if user is banned from admin
   const userStatus = await User.findById({_id: req.body.user})
   if(userStatus.banned) {
     res.status(500).json({
@@ -117,12 +119,16 @@ exports.make_order = async (req, res, next) => {
   let tmp = []
   for (let item of req.body.items) {
     const prod = await getProdData(item.productId)
-    console.log(prod)
+
+    // If size of item is small than take price in index 0
+    const prodPrice = (item.size === 's') ? prod.price[0] : prod.price[1]
+
     tmp.push({
       productId: item.productId,
       name: prod.name,
       qty: item.qty,
-      price: prod.price * item.qty
+      price: prodPrice * item.qty,
+      size: item.size
     })
   }
   orderObj.items = tmp
@@ -159,18 +165,21 @@ exports.make_order = async (req, res, next) => {
   }
 }
 
-function userIsBanned(id) {
-  // User.findById({_id: id})
-  // .exec()
-  // .then(result => {
-  //   return result.banned
-  // })
-  // .catch()
-  User.findById({_id: id}, (err, user) => {
-    console.log(typeof user + " " + user)
-  })
+function getProdData(id) {
+  try {
+    const prod = Product.findById(id)
+    if (!prod) {
+      throw new Error("Product not found!");
+    }
+
+    return prod
+    
+  } catch (err) {
+    throw err;
+  }
 }
 
+// A specific driver takes an order to deliver
 exports.take_an_order = async (req, res, next) => {
   const order = await Order.findById(req.params.orderId)
 
@@ -227,20 +236,6 @@ exports.inmaking = (req, res, next) => {
     .catch(err => res.status(500).json(err))
 }
 
-function getProdData(id) {
-  try {
-    const prod = Product.findById(id)
-    if (!prod) {
-      throw new Error("Product not found!");
-    }
-
-    return prod
-    
-  } catch (err) {
-    throw err;
-  }
-}
-
 exports.filter = (req, res) => {
   const prefix = req.params.prefix
 
@@ -290,4 +285,23 @@ exports.filter_full_date = (req, res) => {
   })
   .catch(err => res.status(401).json(err))
 
+}
+
+
+// Get active orders of a user
+exports.my_orders = (req, res) => {
+  const ph = req.params.phoneNo
+  User.find({phone: ph})
+  .populate({
+    path: 'orders',
+    match: { active: true }
+  })
+  .exec()
+  .then(result => {
+    res.status(200).json({
+      count: result[0].orders.length,
+      result: result[0].orders
+    })
+  })
+  .catch(err => res.status(500).json(err))
 }

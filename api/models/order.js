@@ -20,6 +20,10 @@ const itemSchema = mongoose.Schema({
     type: Number,
     required: true,
     min: [0, 'Cmimi nuk mund te jete me i ulet se zero']
+  },
+  size: {
+    type: String,
+    required: true
   }
 })
 

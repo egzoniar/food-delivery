@@ -144,6 +144,7 @@ exports.ban_user = (req, res) => {
   .catch(err => res.status(500).json(err))
 }
 
+// Unban user
 exports.unban_user = (req, res) => {
   const phoneNo = req.params.phoneNo
 

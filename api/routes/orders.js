@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const Order = require('../models/order')
 
 // Controller reference
 const OrdersController = require('../controllers/order')
@@ -24,6 +23,9 @@ router.get('/getPrepOrders', driverIsAuth, OrdersController.get_prep_orders); //
 
 // Get inMaking orders
 router.get('/listInMakingOrders', adminIsAuth, OrdersController.get_inmaking_orders); //
+
+// My orders
+router.get('/myOrders/:phoneNo', userIsAuth, OrdersController.my_orders) 
 
 // Add Order
 router.post('/makeOrder', userIsAuth, OrdersController.make_order); //
