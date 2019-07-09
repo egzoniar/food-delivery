@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('express')
 const router = express.Router();
 
 // Controller reference
@@ -9,7 +9,7 @@ const userIsAuth = require('../middleware/users_middleware')
 const adminIsAuth = require('../middleware/admin_middleware')
 
 // Get all products (User request)
-router.get('/userGetProducts', userIsAuth, ProductController.user_get_products) //
+router.get('/userGetProducts', ProductController.user_get_products) //
 
 // Get all product (Admin request)
 router.get('/adminGetProducts', adminIsAuth, ProductController.admin_get_products) //

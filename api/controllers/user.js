@@ -58,11 +58,13 @@ exports.get_user_by_phone = (req, res, next) => {
     if(result) {
       res.status(200).json({
         message: "this phone nr exists",
-        user: result
+        user: result,
+        exists: true
       })
     } else {
-      res.status(200).json({
-        message: "this phone nr does not exist"
+      res.status(201).json({
+        message: "this phone nr does not exist",
+        exists: false
       })
     }
     
@@ -84,6 +86,7 @@ exports.user_signup = (req, res, next) => {
         const user = new User({
           _id: new mongoose.Types.ObjectId,
           name: req.body.name,
+          lastname: req.body.lastname,
           phone: req.body.phone,
           email: req.body.email,
           banned: false
