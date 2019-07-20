@@ -22,7 +22,9 @@ router.get('/getArchivedOrders', adminIsAuth, OrdersController.get_archived_orde
 router.get('/getPrepOrders', driverIsAuth, OrdersController.get_prep_orders); //
 
 // Get inMaking orders
-router.get('/listInMakingOrders', adminIsAuth, OrdersController.get_inmaking_orders); //
+router.get('/listInMakingOrders', adminIsAuth, OrdersController.get_inmaking_orders);
+
+router.get('/listInMakingOrdersDriver', driverIsAuth, OrdersController.get_inmaking_orders_driver)//
 
 // My orders
 router.get('/myOrders/:phoneNo', userIsAuth, OrdersController.my_orders) 
@@ -32,6 +34,9 @@ router.post('/makeOrder', userIsAuth, OrdersController.make_order); //
 
 // Take an order
 router.put('/takeAnOrder/:orderId', driverIsAuth, OrdersController.take_an_order) //
+
+// Drop an order
+router.put('/dropAnOrder/:orderId', driverIsAuth, OrdersController.drop_an_order)
 
 // Archive order
 router.patch('/archiveOrder/:orderId', driverIsAuth, OrdersController.archive_order) //

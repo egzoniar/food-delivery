@@ -11,6 +11,8 @@ const adminIsAuth = require('../middleware/admin_middleware')
 // Get all products (User request)
 router.get('/userGetProducts', ProductController.user_get_products) //
 
+router.get('/getProductsByCategory/:category', ProductController.get_products_by_category)
+
 // Get all product (Admin request)
 router.get('/adminGetProducts', adminIsAuth, ProductController.admin_get_products) //
 

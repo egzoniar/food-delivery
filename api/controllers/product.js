@@ -21,6 +21,25 @@ exports.user_get_products = (req, res, next) => {
     })
 }
 
+exports.get_products_by_category = (req, res, next) => {
+  const category = req.params.category
+
+  Product.find({ category: category })
+    .exec()
+    .then(product => {
+      const response = {
+        count: product.length,
+        products: product
+      }
+      res.status(200).json(response)
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      })
+    })
+}
+
 
 // Get all products (Admin)
 exports.admin_get_products = (req, res, next) => {

@@ -67,8 +67,10 @@ exports.get_user_by_phone = (req, res, next) => {
         exists: false
       })
     }
-    
   })
+  .select('name lastname phone email')
+  .lean()
+  .exec()
 }
 
 
@@ -164,4 +166,24 @@ exports.unban_user = (req, res) => {
     })
   })
   .catch(err => res.status(500).json(err))
+}
+
+// Update user
+exports.update_user = (req, res, next) => {
+  const phone = req.params.phoneNo
+  const updateOps = {}
+
+  for(const ops of req.body) {
+    updateOps[ops.propName] = ops.value
+  }
+
+  User
+    .update({phone: phone}, {$set: updateOps})
+    .exec()
+    .then(result => {
+      res.status(200).json(result)
+    })
+    .catch(err => {
+      res.status(500).json(err)
+    })
 }

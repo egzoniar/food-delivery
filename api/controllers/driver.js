@@ -68,7 +68,7 @@ exports.driver_login = (req, res, next) => {
       bcrypt.compare(password, drivers.password, (err, result) => {
         if(err) {
           return res.status(401).json({
-            message: "Auth failed"
+            message: "Fjalekalimi eshte dhene gabim!"
           })
         }
         if(result) {
@@ -79,7 +79,8 @@ exports.driver_login = (req, res, next) => {
 
           return res.status(200).json({
             message: "Auth successful",
-            token: token
+            token: token,
+            driver: drivers
           })
         }
         res.status(401).json({
@@ -89,7 +90,10 @@ exports.driver_login = (req, res, next) => {
     })
     .catch(err => {
       res.status(500).json({
-        error: err
+        error: {
+          status: 500
+        },
+        status: '500'
       })
     })
 }

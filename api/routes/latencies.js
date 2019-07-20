@@ -9,7 +9,7 @@ const adminAuth = require('../middleware/admin_middleware')
 const LatencyController = require('../controllers/latency')
 
 // Get Latency
-router.get('/getLatency', adminAuth, LatencyController.get_latency) //
+router.get('/getLatency', LatencyController.get_latency) //
 
 // Add Latency
 router.post('/addLatency', adminAuth, LatencyController.add_latency)

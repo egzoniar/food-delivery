@@ -55,6 +55,7 @@ exports.get_archived_orders = (req, res, next) => {
 // Get orders that are ready to deliver
 exports.get_prep_orders = (req, res, next) => {
   Order.find()
+    .where("driver").equals(null)
     .where("inMaking").equals("false")
     .exec()
     .then(data => {
@@ -73,6 +74,24 @@ exports.get_prep_orders = (req, res, next) => {
 exports.get_inmaking_orders = (req, res, next) => {
   Order.find()
     .where("inMaking").equals("true")
+    .exec()
+    .then(data => {
+      const response = {
+        count: data.length,
+        orders: data
+      }
+      res.status(200).json(response)
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json(err)
+    })
+}
+
+exports.get_inmaking_orders_driver = (req, res, next) => {
+  Order.find()
+    .where("driver").ne(null)
+    .where("inMaking").equals("false")
     .exec()
     .then(data => {
       const response = {
@@ -113,15 +132,24 @@ exports.make_order = async (req, res, next) => {
     },
     active: true,
     inMaking: true,
-    user: req.body.user
+    user: req.body.user,
+    driver: null
   }
 
   let tmp = []
   for (let item of req.body.items) {
     const prod = await getProdData(item.productId)
-
+    let prodPrice;
     // If size of item is small than take price in index 0
-    const prodPrice = (item.size === 's') ? prod.price[0] : prod.price[1]
+    if(item.size === 's') {
+      prodPrice = prod.price[0]
+    }
+    else {
+      prodPrice = prod.price[1]
+    }
+    // const prodPrice = (item.size === 's') ? prod.price[0] : prod.price[1]
+
+
 
     tmp.push({
       productId: item.productId,
@@ -181,8 +209,10 @@ function getProdData(id) {
 
 // A specific driver takes an order to deliver
 exports.take_an_order = async (req, res, next) => {
-  const order = await Order.findById(req.params.orderId)
 
+  const order = await Order.findById(req.params.orderId)
+  
+  const orderData = order.data
   const driverId = req.body.driver
 
   order.update({
@@ -192,7 +222,30 @@ exports.take_an_order = async (req, res, next) => {
   })
   .then(result => {
     res.status(200).json({
-      message: "Order was taken"
+      message: "Order was taken",
+      result: result,
+      order: orderData
+    })
+  })
+  .catch(err => res.status(500).json(err))
+}
+
+exports.drop_an_order = async (req, res, next) => {
+
+  const order = await Order.findById(req.params.orderId)
+  
+  const orderData = order.data
+
+  order.update({
+    $set: {
+      driver: null
+    }
+  })
+  .then(result => {
+    res.status(200).json({
+      message: "Order was dropped",
+      result: result,
+      order: orderData
     })
   })
   .catch(err => res.status(500).json(err))

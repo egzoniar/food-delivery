@@ -27,4 +27,7 @@ router.patch('/banUser/:phoneNo', adminIsAuth, UsersController.ban_user) //
 // Unban a user
 router.patch('/unbanUser/:phoneNo', adminIsAuth, UsersController.unban_user) //
 
+// Update a user
+router.patch('/updateUser/:phoneNo', UsersController.update_user)
+
 module.exports = router;
