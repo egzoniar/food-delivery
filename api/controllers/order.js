@@ -98,7 +98,7 @@ exports.get_inmaking_orders = (req, res, next) => {
     .where("inMaking")
     .equals("true")
     .where("done")
-    .equals("true")
+    .equals("false")
     .exec()
     .then(data => {
       const response = {
