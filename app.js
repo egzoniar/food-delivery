@@ -13,7 +13,8 @@ const latencyRoutes = require('./api/routes/latencies');
 const orderRoutes = require('./api/routes/orders');
 
 mongoose.connect(
-    `mongodb+srv://${process.env.MONGO_US}:${process.env.MONGO_PA}@fresca-api-lnzk0.mongodb.net/${process.env.MONGO_DB}?retryWrites=true`
+    `mongodb+srv://${process.env.MONGO_US}:${process.env.MONGO_PA}@fresca-api-lnzk0.mongodb.net/${process.env.MONGO_DB}?retryWrites=true`, 
+        { useNewUrlParser: true }
 )
     .then(() => {
         console.log("Database is connected")

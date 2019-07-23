@@ -2,7 +2,7 @@
     "env": {
         "MONGO_US": "vigan",
         "MONGO_PA": "Vigan1234",
-        "MONGO_DB": "fresca",
+        "MONGO_DB": "Fresca",
         "JWT_KEY": "cedx"
     }
 }

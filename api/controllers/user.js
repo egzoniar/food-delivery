@@ -178,12 +178,15 @@ exports.update_user = (req, res, next) => {
   }
 
   User
-    .update({phone: phone}, {$set: updateOps})
+    .findOneAndUpdate({phone: phone}, {$set: updateOps}, {new: true}, (err, doc) => {
+      if(err) {
+        return res.status(500).json(err)
+      }
+      if(doc) {
+        return res.status(200).json(doc)
+      }
+    })
+    .select('name lastname phone email')
+    .lean()
     .exec()
-    .then(result => {
-      res.status(200).json(result)
-    })
-    .catch(err => {
-      res.status(500).json(err)
-    })
 }
