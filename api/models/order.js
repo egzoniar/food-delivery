@@ -47,6 +47,9 @@ const orderSchema = mongoose.Schema({
   inMaking: {
     type: Boolean
   },
+  done: {
+    type: Boolean
+  },
   orderTotal: Number,
   items: [itemSchema],
   user: {
