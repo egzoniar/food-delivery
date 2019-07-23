@@ -3,10 +3,28 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 
 
-// Get all users
+// Get all unbanned users
 exports.get_users = (req, res, next) => {
   User.find()
     .populate('orders', 'location user items.price orderTotal')
+    .where("banned")
+    .equals("false")
+    .exec()
+    .then(result => {
+      res.status(200).json(result)
+    })
+    .catch(err => {
+      res.status(500).json(err)
+    })
+}
+
+
+// Get all banned users
+exports.get_banned_users = (req, res, next) => {
+  User.find()
+    .populate('orders', 'location user items.price orderTotal')
+    .where("banned")
+    .equals("true")
     .exec()
     .then(result => {
       res.status(200).json(result)
@@ -49,13 +67,13 @@ exports.get_user_by_phone = (req, res, next) => {
   const phone = req.params.phone
 
   // Check if phone number exists in db
-  User.findOne({phone: phone}, (err, result) => {
-    if(err) {
+  User.findOne({ phone: phone }, (err, result) => {
+    if (err) {
       res.status(500).json({
         error: err
       })
     }
-    if(result) {
+    if (result) {
       res.status(200).json({
         message: "this phone nr exists",
         user: result,
@@ -68,18 +86,18 @@ exports.get_user_by_phone = (req, res, next) => {
       })
     }
   })
-  .select('name lastname phone email')
-  .lean()
-  .exec()
+    .select('name lastname phone email')
+    .lean()
+    .exec()
 }
 
 
 // User signup
 exports.user_signup = (req, res, next) => {
-  User.find({phone: req.body.phone})
+  User.find({ phone: req.body.phone })
     .exec()
     .then(user => {
-      if(user.length >= 1) {
+      if (user.length >= 1) {
         return res.status(409).json({
           message: "user with this number exists",
           user: user
@@ -101,7 +119,7 @@ exports.user_signup = (req, res, next) => {
               createdUser: user
             })
           })
-          .catch()      
+          .catch()
       }
     })
 }
@@ -111,22 +129,22 @@ exports.user_login = (req, res) => {
   User.findOne({
     phone: req.body.phone
   })
-  .exec()
-  .then(users => {
-    if(users.length < 1) {
-      return res.status(401).json({
-        message: "Login failed"
-      })
-    }
-    const token = jwt.sign({
-      user: users
-    }, 'fresca_users')
+    .exec()
+    .then(users => {
+      if (users.length < 1) {
+        return res.status(401).json({
+          message: "Login failed"
+        })
+      }
+      const token = jwt.sign({
+        user: users
+      }, 'fresca_users')
 
-    return res.status(200).json({
-      message: "Auth successful",
-      token: token
+      return res.status(200).json({
+        message: "Auth successful",
+        token: token
+      })
     })
-  })
 }
 
 
@@ -137,16 +155,16 @@ exports.ban_user = (req, res) => {
   User.update({
     phone: phoneNo
   }, {
-    $set: {
-      banned: true
-    }
-  })
-  .then(result => {
-    res.status(200).json({
-      message: "User is banned!"
+      $set: {
+        banned: true
+      }
     })
-  })
-  .catch(err => res.status(500).json(err))
+    .then(result => {
+      res.status(200).json({
+        message: "User is banned!"
+      })
+    })
+    .catch(err => res.status(500).json(err))
 }
 
 // Unban user
@@ -156,16 +174,16 @@ exports.unban_user = (req, res) => {
   User.update({
     phone: phoneNo
   }, {
-    $set: {
-      banned: false
-    }
-  })
-  .then(result => {
-    res.status(200).json({
-      message: "User is unbanned!"
+      $set: {
+        banned: false
+      }
     })
-  })
-  .catch(err => res.status(500).json(err))
+    .then(result => {
+      res.status(200).json({
+        message: "User is unbanned!"
+      })
+    })
+    .catch(err => res.status(500).json(err))
 }
 
 // Update user
@@ -173,16 +191,16 @@ exports.update_user = (req, res, next) => {
   const phone = req.params.phoneNo
   const updateOps = {}
 
-  for(const ops of req.body) {
+  for (const ops of req.body) {
     updateOps[ops.propName] = ops.value
   }
 
   User
-    .findOneAndUpdate({phone: phone}, {$set: updateOps}, {new: true}, (err, doc) => {
-      if(err) {
+    .findOneAndUpdate({ phone: phone }, { $set: updateOps }, { new: true }, (err, doc) => {
+      if (err) {
         return res.status(500).json(err)
       }
-      if(doc) {
+      if (doc) {
         return res.status(200).json(doc)
       }
     })
