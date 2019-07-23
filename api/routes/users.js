@@ -10,7 +10,7 @@ const UsersController = require('../controllers/user')
 router.get('/getUsers', UsersController.get_users) //adminIsAuth (e hekme) 
 
 // Get all banned users
-router.get('/getBannedUsers', UsersController.get_users) //adminIsAuth (e hekme) 
+router.get('/getBannedUsers', UsersController.get_banned_users) //adminIsAuth (e hekme) 
 
 // Get single user by ID
 router.get('/singleUser/:userId', adminIsAuth, UsersController.get_single_user) //
