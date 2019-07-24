@@ -16,6 +16,9 @@ const itemSchema = mongoose.Schema({
     required: true,
     min: [1, 'Sasia nuk mund te jete zero']
   },
+  productPrice: {
+    type: Number,
+  },
   price: {
     type: Number,
     required: true,

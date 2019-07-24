@@ -134,6 +134,7 @@ exports.get_inmaking_orders_driver = (req, res, next) => {
 };
 
 exports.make_order = async (req, res, next) => {
+  
   if (!(Array.isArray(req.body.items) && req.body.items.length)) {
     res.status(500).json({
       message: "It must be an Array and it can't be empty!"
@@ -179,6 +180,7 @@ exports.make_order = async (req, res, next) => {
       productId: item.productId,
       name: prod.name,
       qty: item.qty,
+      productPrice: prodPrice,
       price: prodPrice * item.qty,
       size: item.size
     });
