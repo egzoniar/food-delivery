@@ -119,6 +119,8 @@ exports.get_inmaking_orders_driver = (req, res, next) => {
     .ne(null)
     .where("done")
     .equals("true")
+    .where("active")
+    .equals("true")
     .exec()
     .then(data => {
       const response = {
