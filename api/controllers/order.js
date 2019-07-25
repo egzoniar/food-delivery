@@ -136,7 +136,7 @@ exports.get_inmaking_orders_driver = (req, res, next) => {
 };
 
 exports.make_order = async (req, res, next) => {
-  
+
   if (!(Array.isArray(req.body.items) && req.body.items.length)) {
     res.status(500).json({
       message: "It must be an Array and it can't be empty!"
@@ -352,7 +352,7 @@ exports.filter = (req, res) => {
   console.log(opts);
 
   Order.find({ createdAt: opts })
-    .populate("Order.itemSchema")
+    .populate("Order.itemSchema user")
     .exec()
     .then(result => {
       res.status(200).json({

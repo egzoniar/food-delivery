@@ -25,10 +25,10 @@ router.post('/userSignup', UsersController.user_signup); //
 router.post('/login', UsersController.user_login) //
 
 // Ban a user
-router.patch('/banUser/:phoneNo', adminIsAuth, UsersController.ban_user) //
+router.patch('/banUser/:phoneNo', UsersController.ban_user) //adminIsAuth (E hekme)
 
 // Unban a user
-router.patch('/unbanUser/:phoneNo', adminIsAuth, UsersController.unban_user) //
+router.patch('/unbanUser/:phoneNo', UsersController.unban_user) //adminIsAuth (E hekme)
 
 // Update a user
 router.patch('/updateUser/:phoneNo', UsersController.update_user)
