@@ -158,7 +158,7 @@ exports.make_order = async (req, res, next) => {
       coordinates: req.body.coordinates
     },
     active: true,
-    inMaking: true,
+    inMaking: false,
     distance: req.body.distance,
     done: false,
     user: req.body.user,
