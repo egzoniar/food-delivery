@@ -53,6 +53,9 @@ const orderSchema = mongoose.Schema({
   done: {
     type: Boolean
   },
+  distance: {
+    type: String,
+  },
   orderTotal: Number,
   items: [itemSchema],
   user: {

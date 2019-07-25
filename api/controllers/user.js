@@ -86,7 +86,7 @@ exports.get_user_by_phone = (req, res, next) => {
       })
     }
   })
-    .select('name lastname phone email')
+    .select('name lastname phone email banned')
     .lean()
     .exec()
 }

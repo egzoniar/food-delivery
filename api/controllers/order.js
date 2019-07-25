@@ -59,8 +59,8 @@ exports.get_prep_orders = (req, res, next) => {
   Order.find()
     .where("driver")
     .equals(null)
-    .where("inMaking")
-    .equals("false")
+    .where("done")
+    .equals("true")
     .exec()
     .then(data => {
       const response = {
@@ -159,6 +159,7 @@ exports.make_order = async (req, res, next) => {
     },
     active: true,
     inMaking: true,
+    distance: req.body.distance,
     done: false,
     user: req.body.user,
     driver: null
