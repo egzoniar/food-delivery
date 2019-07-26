@@ -49,7 +49,7 @@ router.patch("/inMaking/:orderId", OrdersController.inmaking); //Duhet me ndrysh
 
 router.patch("/done/:orderId", OrdersController.done); //Duhet me shtu si Route
 
-router.get("/filter/:prefix", adminIsAuth, OrdersController.filter); //
+router.get("/filter/:prefix", OrdersController.filter); //adminIsAuth (e hekme), 
 
 router.get("/filterFullDate/:date", adminIsAuth, OrdersController.filter_full_date);
 
