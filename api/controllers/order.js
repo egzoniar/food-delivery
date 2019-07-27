@@ -3,6 +3,8 @@ const Order = require("../models/order");
 const Product = require("../models/product");
 const User = require("../models/user");
 
+const io = require('../../socket')
+
 exports.get_driver_by_id = (req, res, next) => {
   const id = req.params.driverId;
   Order.find({
@@ -208,7 +210,7 @@ exports.make_order = async (req, res, next) => {
     .catch(err => {
       res.status(500).json(err);
     });
-
+    io.getIo().emit('orders', { action: 'newOrder', order: order})
   try {
     const author = await User.findById(req.body.user);
     if (!author) {
@@ -304,7 +306,7 @@ exports.archive_order = (req, res, next) => {
 exports.inmaking = (req, res, next) => {
   const id = req.params.orderId;
 
-  Order.update(
+  const order = Order.update(
     {
       _id: id
     },
@@ -321,12 +323,13 @@ exports.inmaking = (req, res, next) => {
       });
     })
     .catch(err => res.status(500).json(err));
+
 };
 
 exports.done = (req, res, next) => {
   const id = req.params.orderId;
 
-  Order.update(
+  const order = Order.update(
     {
       _id: id
     },
@@ -343,6 +346,9 @@ exports.done = (req, res, next) => {
       });
     })
     .catch(err => res.status(500).json(err));
+
+    io.getIo().emit('orders', { action: 'readyToDeliver', order: order})
+
 };
 
 exports.filter = (req, res) => {
