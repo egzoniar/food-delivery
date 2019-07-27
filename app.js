@@ -24,7 +24,7 @@ mongoose.connect(
     .then(() => {
         server.listen(port);
         console.log("Database is connected")
-        const io = require('socket.io')(server)
+        const io = require('./socket').init(server)
 
         io.on('connection', socket => {
             console.log('Client connected')
