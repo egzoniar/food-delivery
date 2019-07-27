@@ -2,10 +2,15 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 
+const USERS_PER_PAGE = 1
 
 // Get all unbanned users
 exports.get_users = (req, res, next) => {
+  const page = req.query.page
+
   User.find()
+    .skip((page - 1) * USERS_PER_PAGE)
+    .limit(USERS_PER_PAGE)
     .populate('orders', 'location user items.price orderTotal')
     .where("banned")
     .equals("false")

@@ -3,6 +3,8 @@ const Order = require("../models/order");
 const Product = require("../models/product");
 const User = require("../models/user");
 
+const ORDERS_PER_PAGE = 2
+
 exports.get_driver_by_id = (req, res, next) => {
   const id = req.params.driverId;
   Order.find({
@@ -37,7 +39,11 @@ exports.get_active_orders = (req, res, next) => {
 };
 
 exports.get_archived_orders = (req, res, next) => {
+  const page = req.query.page
+  
   Order.find()
+    .skip((page - 1) * ORDERS_PER_PAGE)
+    .limit(ORDERS_PER_PAGE)
     .where("active")
     .equals("false")
     .exec()
@@ -345,11 +351,11 @@ exports.done = (req, res, next) => {
     .catch(err => res.status(500).json(err));
 };
 
+// Get orders with prefix (daily, weekly, monthly)
 exports.filter = (req, res) => {
   const prefix = req.params.prefix;
 
   const opts = getDate(prefix);
-  console.log(opts);
 
   Order.find({ createdAt: opts })
     .populate("Order.itemSchema user")
@@ -381,8 +387,12 @@ function getDate(prefix) {
       "-" +
       jsDate.getDate()
     );
+  } else if(prefix === 'month') {
+    opts.$gte = new Date(
+      jsDate.getFullYear() + "-" + (jsDate.getMonth() + 1) + "-" + 1
+    )
   }
-
+  console.log(opts)
   return opts;
 }
 

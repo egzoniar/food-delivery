@@ -16,7 +16,7 @@ router.get("/getOrdersByDriverID/:driverId", OrdersController.get_driver_by_id);
 router.get("/getActiveOrders", OrdersController.get_active_orders); //
 
 // Get archived orders
-router.get("/getArchivedOrders", adminIsAuth, OrdersController.get_archived_orders); //
+router.get("/getArchivedOrders", OrdersController.get_archived_orders); //
 
 // Get prepared orders
 router.get("/getPrepOrders", driverIsAuth, OrdersController.get_prep_orders); //
