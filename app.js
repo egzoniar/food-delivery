@@ -2,8 +2,13 @@ const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const http = require('http');
+
+const port = process.env.PORT || 8000;
 
 const app = express();
+
+const server = http.createServer(app);
 
 const productRoutes = require('./api/routes/products');
 const adminRoutes = require('./api/routes/admins');
@@ -17,7 +22,13 @@ mongoose.connect(
         { useNewUrlParser: true }
 )
     .then(() => {
+        server.listen(port);
         console.log("Database is connected")
+        const io = require('socket.io')(server)
+
+        io.on('connection', socket => {
+            console.log('Client connected')
+        })
     })
     .catch(error => {
         console.log( error)
