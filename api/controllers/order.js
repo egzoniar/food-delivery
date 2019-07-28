@@ -336,9 +336,11 @@ exports.done = (req, res, next) => {
 exports.filter = (req, res) => {
   const prefix = req.params.prefix;
 
-  const opts = getDate(prefix);
+  const params = {}
 
-  Order.find({ createdAt: opts })
+  if(prefix !== 'all') params.createdAt = getDate(prefix);
+
+  Order.find(params)
     .populate("Order.itemSchema user")
     .exec()
     .then(result => {
