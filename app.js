@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const http = require('http');
+const path = require('path')
 
 const port = process.env.PORT || 8000;
 
@@ -63,6 +64,9 @@ app.use('/users', userRoutes);
 app.use('/drivers', driverRoutes);
 app.use('/latency', latencyRoutes);
 app.use('/orders', orderRoutes)
+
+
+app.use('/images', express.static('images'))
 
 app.use((req, res, next) => {
     const error = new Error('Not found');

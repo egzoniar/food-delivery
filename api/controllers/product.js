@@ -115,13 +115,19 @@ exports.admin_get_single_product = (req, res, next) => {
 
 // Add product
 exports.add_product = (req, res, next) => {
+
+  // const img = req.file.path
+
+  // console.log(img)
+  // return res.status(200).json()
+
   const product = new Product({
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
     desc: req.body.desc,
     price: req.body.price,
     category: req.body.category,
-    img: req.body.img,
+    img: req.file.path,
   })
 
   product

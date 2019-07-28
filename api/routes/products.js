@@ -1,6 +1,18 @@
 const express = require('express')
 const router = express.Router();
 
+const multer = require('multer')
+
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, './images/')
+  },
+  filename: function(req, file, cb) {
+    cb(null, file.originalname)
+  }
+})
+const upload = multer({storage: storage})
+
 // Controller reference
 const ProductController = require('../controllers/product')
 
@@ -23,7 +35,7 @@ router.get('/userSingleProduct/:productId', userIsAuth, ProductController.user_g
 router.get('/adminSingleProduct/:productId', adminIsAuth, ProductController.admin_get_single_product) //
 
 // Add Product
-router.post('/addProduct', adminIsAuth, ProductController.add_product) //
+router.post('/addProduct', upload.single('image'), ProductController.add_product) //
 
 // Update Product
 router.patch('/updateProduct/:productId', adminIsAuth, ProductController.update_product) //
