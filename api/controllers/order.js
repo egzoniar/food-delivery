@@ -68,8 +68,7 @@ exports.get_prep_orders = (req, res, next) => {
     .equals(null)
     .where("done")
     .equals("true")
-    .where("inMaking")
-    .equals("false")
+    .sort({createdAt: -1})
     .exec()
     .then(data => {
       const response = {
@@ -130,8 +129,7 @@ exports.get_inmaking_orders_driver = (req, res, next) => {
     .equals("true")
     .where("active")
     .equals("true")
-    .where("inMaking")
-    .equals("false")
+    .sort({createdAt: -1})
     .exec()
     .then(data => {
       const response = {
@@ -328,7 +326,7 @@ exports.done = (req, res, next) => {
         res.status(200).json({
           message: "Order is done",
         });
-        io.getIo().emit('orders', { action: 'readyToDeliver', order: doc})
+        io.getIo().emit('orders', { action: 'readyToDeliver', order: {order: doc, isNew: true}})
       }
     });
 
