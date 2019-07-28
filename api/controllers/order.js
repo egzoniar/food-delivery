@@ -68,6 +68,8 @@ exports.get_prep_orders = (req, res, next) => {
     .equals(null)
     .where("done")
     .equals("true")
+    .where("inMaking")
+    .equals("false")
     .exec()
     .then(data => {
       const response = {
@@ -128,6 +130,8 @@ exports.get_inmaking_orders_driver = (req, res, next) => {
     .equals("true")
     .where("active")
     .equals("true")
+    .where("inMaking")
+    .equals("false")
     .exec()
     .then(data => {
       const response = {
@@ -244,46 +248,36 @@ function getProdData(id) {
 
 // A specific driver takes an order to deliver
 exports.take_an_order = async (req, res, next) => {
-  const order = await Order.findById(req.params.orderId);
 
-  const orderData = order.data;
   const driverId = req.body.driver;
-
-  order
-    .update({
-      $set: {
-        driver: driverId
-      }
-    })
-    .then(result => {
+  orderId = req.params.orderId
+  Order.findOneAndUpdate({_id: orderId}, {$set:{driver: driverId}}, {new: false}, (err, doc) => {
+    if (err) {
+      err.status(500).json(err)
+    }
+    if(doc) {
       res.status(200).json({
         message: "Order was taken",
-        result: result,
-        order: orderData
       });
-    })
-    .catch(err => res.status(500).json(err));
+      io.getIo().emit('orders', { action: 'takeOrder', order: doc})
+    }
+  });
 };
 
 exports.drop_an_order = async (req, res, next) => {
-  const order = await Order.findById(req.params.orderId);
-
-  const orderData = order.data;
-
-  order
-    .update({
-      $set: {
-        driver: null
-      }
-    })
-    .then(result => {
+  const driverId = req.body.driver;
+  orderId = req.params.orderId
+  Order.findOneAndUpdate({_id: orderId}, {$set:{driver: null}}, {new: false}, (err, doc) => {
+    if (err) {
+      err.status(500).json(err)
+    }
+    if(doc) {
       res.status(200).json({
-        message: "Order was dropped",
-        result: result,
-        order: orderData
+        message: "Order was droped",
       });
-    })
-    .catch(err => res.status(500).json(err));
+      io.getIo().emit('orders', { action: 'dropOrder', order: doc})
+    }
+  });
 };
 
 exports.archive_order = (req, res, next) => {
@@ -310,49 +304,33 @@ exports.archive_order = (req, res, next) => {
 
 exports.inmaking = (req, res, next) => {
   const id = req.params.orderId;
-
-  const order = Order.update(
-    {
-      _id: id
-    },
-    {
-      $set: {
-        inMaking: true
+    
+    Order.findOneAndUpdate({_id: id}, {$set:{inMaking: true}}, {new: false}, (err, doc) => {
+      if (err) {
+        err.status(500).json(err)
       }
-    }
-  )
-    .then(result => {
-      res.status(200).json({
-        message: "Order is in making",
-        updatedOrder: result
-      });
-    })
-    .catch(err => res.status(500).json(err));
-
+      if(doc) {
+        res.status(200).json({
+          message: "Order is in making",
+        });
+        io.getIo().emit('orders', { action: 'inMaking', order: doc})
+      }
+    });
 };
 
 exports.done = (req, res, next) => {
   const id = req.params.orderId;
-
-  const order = Order.update(
-    {
-      _id: id
-    },
-    {
-      $set: {
-        done: true
+    Order.findOneAndUpdate({_id: id}, {$set:{done: true}}, {new: false}, (err, doc) => {
+      if (err) {
+        err.status(500).json(err)
       }
-    }
-  )
-    .then(result => {
-      res.status(200).json({
-        message: "Order is Done, it is ready to deliver",
-        updatedOrder: result
-      });
-    })
-    .catch(err => res.status(500).json(err));
-
-    io.getIo().emit('orders', { action: 'readyToDeliver', order: order})
+      if(doc) {
+        res.status(200).json({
+          message: "Order is done",
+        });
+        io.getIo().emit('orders', { action: 'readyToDeliver', order: doc})
+      }
+    });
 
 };
 
