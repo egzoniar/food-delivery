@@ -15,6 +15,9 @@ router.get('/getBannedUsers', UsersController.get_banned_users) //adminIsAuth (e
 // Get single user by ID
 router.get('/singleUser/:userId', adminIsAuth, UsersController.get_single_user) //
 
+// check if user is banned 
+router.get('/isUserBanned/:id', UsersController.is_user_banned)
+
 // Get user by phone number
 router.get('/getUserByPhone/:phone', UsersController.get_user_by_phone) //
 

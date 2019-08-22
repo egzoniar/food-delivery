@@ -123,6 +123,8 @@ exports.get_inmaking_orders = (req, res, next) => {
 
 exports.get_inmaking_orders_driver = (req, res, next) => {
   Order.find()
+    .lean()
+    .populate('user', 'phone')
     .where("driver")
     .ne(null)
     .where("done")

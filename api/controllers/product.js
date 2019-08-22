@@ -31,10 +31,10 @@ exports.get_products_by_category = (req, res, next) => {
         count: product.length,
         products: product
       }
-      res.status(200).json(response)
+      return res.status(200).json(response)
     })
     .catch(err => {
-      res.status(500).json({
+      return res.status(500).json({
         error: err
       })
     })

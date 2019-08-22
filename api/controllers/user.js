@@ -39,6 +39,32 @@ exports.get_banned_users = (req, res, next) => {
     })
 }
 
+exports.is_user_banned = (req, res, next) => {
+  const id = req.params.id
+  User.findOne({ _id: id }, (err, result) => {
+    if (err) {
+      res.status(500).json({
+        error: err
+      })
+      return
+    }
+    if (result) {
+      res.status(200).json({
+        message: "this user is banned",
+        banned: result.banned
+      })
+    } else {
+      res.status(201).json({
+        message: "this phone nr does not exist",
+        exists: false
+      })
+    }
+  })
+    .select('banned')
+    .lean()
+    .exec()
+}
+
 
 // Get single user by ID
 exports.get_single_user = (req, res, next) => {
